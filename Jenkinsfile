@@ -1,4 +1,4 @@
-@Library('test-m0h') _
+@Library('test-moh') _
 
 pipeline {
     agent any
@@ -7,7 +7,11 @@ pipeline {
         stage('Update Service') {
             steps {
                 script {
-                    updateService(params.SITE, params.SERVICE, params.VERSION)
+                    def sites = params.SITE
+                    def services = params.SERVICE
+                    def version = params.VERSION
+
+                    // Your logic to update services
                 }
             }
         }
