@@ -1,21 +1,18 @@
-@Library('moh') _  // Load the shared library
+@Library('moh') _
 
 pipeline {
     agent any
-    stages {
-        stage('Define Parameters') {
-            steps {
-                script {
-                    def paramsDef = moh()  // Call the shared parameters
-                    properties([parameters(paramsDef)])
-                }
-            }
+    parameters {
+        script {
+            return moh.getParameterDefinitions()
         }
-        stage('Display Selected Parameters') {
+    }
+    stages {
+        stage('Display Parameters') {
             steps {
                 script {
-                    echo "Selected Sites: ${params.SITES.join(', ')}"
-                    echo "Selected Services: ${params.SERVICES.join(', ')}"
+                    echo "Selected Sites: ${params.SITE}"
+                    echo "Selected Services: ${params.SERVICE}"
                     echo "Version: ${params.VERSION}"
                 }
             }
