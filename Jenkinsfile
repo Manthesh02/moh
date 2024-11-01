@@ -1,17 +1,15 @@
-@Library('test-moh') _
+@Library('moh') _
 
 pipeline {
     agent any
     parameters sharedParams()
     stages {
-        stage('Update Service') {
+        stage('Check Parameters') {
             steps {
                 script {
-                    def sites = params.SITE
-                    def services = params.SERVICE
-                    def version = params.VERSION
-
-                    // Your logic to update services
+                    echo "Selected Sites: ${params.SITE}"
+                    echo "Selected Services: ${params.SERVICE}"
+                    echo "Version: ${params.VERSION}"
                 }
             }
         }
