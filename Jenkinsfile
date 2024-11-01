@@ -1,14 +1,16 @@
+@Library('moh') _
+
 pipeline {
     agent any
-    parameters {
-        choice(name: 'TEST_PARAM', choices: 'Option1\nOption2\nOption3', description: 'Select an option')
-    }
+    parameters moh()
     stages {
-        stage('Test Stage') {
+        stage('Parameter Check') {
             steps {
                 script {
-                    // Print the selected option
-                    echo "Selected Option: ${params.TEST_PARAM}"
+                    // Log the selected parameters
+                    echo "Selected Sites: ${params.SITE}"
+                    echo "Selected Services: ${params.SERVICE}"
+                    echo "Version: ${params.VERSION}"
                 }
             }
         }
