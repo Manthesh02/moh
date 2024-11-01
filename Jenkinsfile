@@ -1,11 +1,17 @@
-@Library('moh') _  // Make sure the library name matches
+@Library('moh') _  // Load the shared library
 
 pipeline {
     agent any
 
     parameters {
-        // Load the Active Choice parameter from the moh shared library
-        moh()
+        // Declare parameters directly; call the shared library method in the parameters block
+        activeChoice(name: 'SITE', 
+                     type: 'PT_CHECKBOX', 
+                     description: 'Select the Site (namespace:IP)', 
+                     choiceType: 'CHECKBOX', 
+                     script: [
+                         """return ['Site1', 'Site2', 'Site3']"""
+                     ])
         string(name: 'VERSION', defaultValue: '1.0.0', description: 'Specify the Version to deploy')
     }
 
