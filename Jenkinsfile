@@ -1,9 +1,9 @@
-@Library('moh') _ // Reference to your shared library
+@Library('moh') _ // Replace 'moh' with the name of your shared library
 
 pipeline {
     agent any
 
-    parameters sharedParams() // Load parameters from sharedParams.groovy
+    parameters sharedParams() // Ensure sharedParams() is properly defined
 
     stages {
         stage('Parameter Check') {
