@@ -1,22 +1,21 @@
-// vars/moh.groovy
 def call() {
     return [
-        activeChoiceParam(
-            name: 'SITE',
-            type: 'CHECKBOX',
-            description: 'Select the Site (namespace:IP)',
-            groovyScript: [
-                script: 'return ["MHHTP:10.5.43.89", "LGHJP:10.5.43.93", "RGHPJ:10.5.43.94"]'
-            ]
+        activeChoice(name: 'SITES', 
+                     description: 'Select the Sites (multiple selections allowed)', 
+                     choices: ['MHHTP:10.5.43.89', 'LGHJP:10.5.43.93', 'RGHPJ:10.5.43.94'], 
+                     script: '''
+                         return ['MHHTP:10.5.43.89', 'LGHJP:10.5.43.93', 'RGHPJ:10.5.43.94']
+                     '''
         ),
-        activeChoiceParam(
-            name: 'SERVICE',
-            type: 'CHECKBOX',
-            description: 'Select the Service',
-            groovyScript: [
-                script: 'return ["word-report", "dataset-setup", "scm-integration", "nphies-clinical-service", "dataset-processing", "active-mq", "medical-extensions", "release-notes-service", "security-service", "message-broker", "email-service", "word-documents", "oasis-app-service"]'
-            ]
+        activeChoice(name: 'SERVICES', 
+                     description: 'Select the Services (multiple selections allowed)', 
+                     choices: ['word-report', 'dataset-setup', 'scm-integration'], 
+                     script: '''
+                         return ['word-report', 'dataset-setup', 'scm-integration']
+                     '''
         ),
-        string(name: 'VERSION', defaultValue: '1.0.0', description: 'Specify the Version to deploy')
+        string(name: 'VERSION', 
+               defaultValue: '1.0.0', 
+               description: 'Specify the Version to deploy')
     ]
 }
