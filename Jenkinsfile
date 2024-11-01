@@ -4,9 +4,8 @@ pipeline {
     agent any
 
     parameters {
-        script {
-            sharedParams() // Load parameters from shared library
-        }
+        // Directly call the method from your shared library that returns the parameters
+        sharedParams() // This function should return a list of parameters
     }
 
     stages {
