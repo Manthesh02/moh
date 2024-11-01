@@ -7,10 +7,13 @@ def call() {
             choiceType: 'CHECKBOX',
             script: [
                 classpath: [],
-                script: 'return ["MHHTP:10.5.43.89","LGHJP:10.5.43.93"]'
+                script: '''
+                    // Replace this URL with your actual data source
+                    def sites = ["MHHTP:10.5.43.89", "LGHJP:10.5.43.93"];
+                    return sites
+                '''
             ]
         ),
-        // Add more parameters as needed
-        string(name: 'VERSION', defaultValue: '1.0.0', description: 'Specify the Version to deploy')
+        // Other parameters can go here
     ]
 }
