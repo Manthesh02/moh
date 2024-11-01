@@ -1,7 +1,23 @@
-def call() {
-    return [
-        string(name: 'SERVICE', defaultValue: 'example-service', description: 'Select the Service'),
-        string(name: 'VERSION', defaultValue: '1.0.0', description: 'Specify the Version to deploy'),
-        booleanParam(name: 'RUN_TESTS', defaultValue: false, description: 'Run Tests?')
-    ]
+@Library('moh') _
+
+pipeline {
+    agent any
+
+    parameters {
+        script {
+            return sharedParams()
+        }
+    }
+
+    stages {
+        stage('Parameter Check') {
+            steps {
+                script {
+                    echo "Selected Service: ${params.SERVICE}"
+                    echo "Version: ${params.VERSION}"
+                    echo "Run Tests: ${params.RUN_TESTS}"
+                }
+            }
+        }
+    }
 }
