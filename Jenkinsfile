@@ -13,10 +13,10 @@ pipeline {
         )
     }
     stages {
-        stage('Test Stage') {
+        stage('Parameter Check') {
             steps {
                 script {
-                    // Print the selected options
+                    // Log the selected parameter
                     echo "Selected Option: ${params.TEST_PARAM}"
                 }
             }
