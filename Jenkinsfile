@@ -4,9 +4,9 @@ pipeline {
     agent any
 
     parameters {
-        script {
-            return sharedParams()
-        }
+        choice(name: 'SERVICE', choices: ['service1', 'service2', 'service3'], description: 'Select a service')
+        string(name: 'VERSION', defaultValue: '1.0.0', description: 'Specify the version to deploy')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Run tests after deployment')
     }
 
     stages {
