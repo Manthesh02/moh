@@ -2,17 +2,15 @@ def call() {
     return [
         activeChoice(name: 'SITES', 
                      description: 'Select the Sites (multiple selections allowed)', 
-                     choices: ['MHHTP:10.5.43.89', 'LGHJP:10.5.43.93', 'RGHPJ:10.5.43.94'], 
-                     script: {
+                     script: ''' 
                          return ['MHHTP:10.5.43.89', 'LGHJP:10.5.43.93', 'RGHPJ:10.5.43.94']
-                     }
+                     '''
         ),
         activeChoice(name: 'SERVICES', 
                      description: 'Select the Services (multiple selections allowed)', 
-                     choices: ['word-report', 'dataset-setup', 'scm-integration'], 
-                     script: {
+                     script: ''' 
                          return ['word-report', 'dataset-setup', 'scm-integration']
-                     }
+                     '''
         ),
         string(name: 'VERSION', 
                defaultValue: '1.0.0', 
