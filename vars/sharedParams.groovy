@@ -11,7 +11,7 @@ def call() {
                     classpath: [],
                     script: 'return ["default-site:0.0.0.0"]'
                 ],
-                script: 'return ["MHHTP:10.5.43.89", "LGHJP:10.5.43.93"]' // Keep it simple for testing
+                script: 'return ["MHHTP:10.5.43.89", "LGHJP:10.5.43.93"]'
             ]
         )
     ]
