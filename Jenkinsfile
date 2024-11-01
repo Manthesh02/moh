@@ -1,6 +1,12 @@
-pipeline {
-    agent any
-    parameters {
+@Library('moh') _
+
+properties([
+    parameters([
+        choice(
+            name: 'ENV',
+            choices: ['dev', 'prod'],
+            description: 'Select the environment'
+        ),
         activeChoiceParam(
             name: 'SITE',
             type: 'CHECKBOX',
@@ -18,15 +24,45 @@ pipeline {
             ]
         ),
         string(name: 'VERSION', defaultValue: '1.0.0', description: 'Specify the Version to deploy')
-    }
+    ])
+])
+
+pipeline {
+    agent any
     stages {
         stage('Parameter Check') {
             steps {
                 script {
                     // Log the selected parameters for verification
+                    echo "Environment: ${params.ENV}"
                     echo "Selected Sites: ${params.SITE}"
                     echo "Selected Services: ${params.SERVICE}"
                     echo "Version: ${params.VERSION}"
+                }
+            }
+        }
+        stage('Update Service') {
+            steps {
+                script {
+                    def sites = params.SITE.split(',')
+                    def services = params.SERVICE.split(',')
+                    sites.each { site ->
+                        def siteDetails = site.split(':')
+                        def namespace = siteDetails[0]
+                        def ip = siteDetails[1]
+
+                        services.each { service ->
+                            println "Connecting to site with namespace: ${namespace} and IP: ${ip}"
+                            println "Updating service: ${service} to version: ${params.VERSION}"
+
+                            sh """
+                                sshpass -p '${credentials('ssh-credentials').password}' ssh -o StrictHostKeyChecking=no ${credentials('ssh-credentials').username}@${ip} "
+                                namespace=${namespace} &&
+                                docker pull oasissys/${service}:${params.VERSION} &&
+                                kubectl set image deployment/${service} ${service}=oasissys/${service}:${params.VERSION} -n ${namespace}
+                            """
+                        }
+                    }
                 }
             }
         }
