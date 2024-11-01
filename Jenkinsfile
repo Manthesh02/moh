@@ -1,10 +1,12 @@
 @Library('moh') _
 
+def paramsMap = moh.getParameterDefinitions()
+
 pipeline {
     agent any
     parameters {
-        script {
-            return moh.getParameterDefinitions()
+        paramsMap.each { param ->
+            parameter(param)
         }
     }
     stages {
