@@ -2,15 +2,15 @@
 
 pipeline {
     agent any
-    parameters {
-        choice(name: 'TEST_PARAM', choices: 'Option1\nOption2\nOption3', description: 'Select an option')
-    }
+    parameters moh()
     stages {
         stage('Test Stage') {
             steps {
                 script {
                     // Print the selected options
-                    echo "Selected Option: ${params.TEST_PARAM}"
+                    echo "Selected Sites: ${params.SITE}"
+                    echo "Selected Services: ${params.SERVICE}"
+                    echo "Version: ${params.VERSION}"
                 }
             }
         }
