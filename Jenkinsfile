@@ -2,10 +2,20 @@
 
 pipeline {
     agent any
-    parameters {
-        moh()  // Call the shared parameters defined in moh.groovy
-    }
     stages {
+        stage('Define Parameters') {
+            steps {
+                script {
+                    // Call the shared parameters
+                    def paramsDef = moh()
+
+                    // Set parameters dynamically
+                    properties([
+                        parameters(paramsDef)
+                    ])
+                }
+            }
+        }
         stage('Display Selected Parameters') {
             steps {
                 script {
