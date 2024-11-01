@@ -1,13 +1,6 @@
 // vars/moh.groovy
 def call() {
     return [
-        activeChoiceParam(
-            name: 'TEST_PARAM',
-            type: 'CHECKBOX',
-            description: 'Select the option',
-            groovyScript: [
-                script: 'return ["Option1", "Option2", "Option3"]'
-            ]
-        )
+        choice(name: 'TEST_PARAM', choices: 'Option1\nOption2\nOption3', description: 'Select an option')
     ]
 }
