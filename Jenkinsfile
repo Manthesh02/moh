@@ -2,22 +2,30 @@ pipeline {
     agent any
 
     stages {
-        stage('Prepare') {
+        stage('Parameters') {
             steps {
                 script {
-                    // Defining the active choice parameter within a script block
-                    def sites = new ActiveChoicesParameter(
-                        name: 'SITE',
-                        type: 'PT_CHECKBOX',
-                        description: 'Select the Site (namespace:IP)',
-                        choiceType: 'CHECKBOX',
-                        script: [
-                            'return ["Site1", "Site2", "Site3"]'
-                        ]
-                    )
-                    
-                    // Using the parameter in your pipeline
-                    echo "Selected Site: ${params.SITE}" // Access the Active Choice parameter
+                    properties([
+                        parameters([
+                            [
+                                $class: 'CascadeChoiceParameter',
+                                name: 'SITE',
+                                description: 'Select the Site',
+                                choiceType: 'PT_SINGLE_SELECT',
+                                script: [
+                                    $class: 'GroovyScript',
+                                    script: 'return ["Site1", "Site2", "Site3"]'
+                                ]
+                            ]
+                        ])
+                    ])
+                }
+            }
+        }
+        stage('Display Selected Site') {
+            steps {
+                script {
+                    echo "Selected Site: ${params.SITE}" // Access the parameter
                 }
             }
         }
