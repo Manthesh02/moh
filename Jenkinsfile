@@ -1,16 +1,18 @@
-@Library('moh') _  // Make sure the library name matches what you configured in Jenkins
+@Library('moh') _  // Ensure the library name matches your configuration
 
 pipeline {
     agent any
 
     parameters {
-        // Load parameters from the shared library
-        script {
-            def params = sharedParams()  // Call the function to get parameters
-            params.each { param -> 
-                parameter(param)  // Add each parameter to the Jenkins pipeline
-            }
-        }
+        // You need to define parameters directly without script blocks
+        activeChoice(name: 'SITE', type: 'PT_CHECKBOX', description: 'Select the Site (namespace:IP)', choiceType: 'CHECKBOX', script: [
+            classpath: [],
+            script: '''
+                // Replace this URL with your actual data source
+                def sites = ["MHHTP:10.5.43.89", "LGHJP:10.5.43.93"];
+                return sites
+            '''
+        ])
     }
 
     stages {
