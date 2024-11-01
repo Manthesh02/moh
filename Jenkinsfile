@@ -2,11 +2,6 @@
 
 properties([
     parameters([
-        choice(
-            name: 'ENV',
-            choices: ['dev', 'prod'],
-            description: 'Select the environment'
-        ),
         activeChoiceParam(
             name: 'SITE',
             type: 'CHECKBOX',
@@ -34,7 +29,6 @@ pipeline {
             steps {
                 script {
                     // Log the selected parameters for verification
-                    echo "Environment: ${params.ENV}"
                     echo "Selected Sites: ${params.SITE}"
                     echo "Selected Services: ${params.SERVICE}"
                     echo "Version: ${params.VERSION}"
