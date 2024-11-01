@@ -1,22 +1,13 @@
-@Library('moh') _
-
 pipeline {
     agent any
     parameters {
-        activeChoiceParam(
-            name: 'TEST_PARAM',
-            type: 'CHECKBOX',
-            description: 'Select an option',
-            groovyScript: [
-                script: 'return ["Option1", "Option2", "Option3"]'
-            ]
-        )
+        choice(name: 'TEST_PARAM', choices: 'Option1\nOption2\nOption3', description: 'Select an option')
     }
     stages {
-        stage('Parameter Check') {
+        stage('Test Stage') {
             steps {
                 script {
-                    // Log the selected parameter
+                    // Print the selected option
                     echo "Selected Option: ${params.TEST_PARAM}"
                 }
             }
