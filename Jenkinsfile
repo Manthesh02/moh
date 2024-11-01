@@ -2,7 +2,7 @@
 
 pipeline {
     agent any
-    parameters sharedParams()
+    parameters moh()
     stages {
         stage('Test Stage') {
             steps {
