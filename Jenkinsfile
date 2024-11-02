@@ -1,3 +1,5 @@
+@Library('moh') _
+
 pipeline {
     agent any
 
@@ -9,20 +11,31 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return ["MHHTP:10.5.43.89", "LGHJP:10.5.43.93"]''', // Static test
+                    'return moh.fetchSites()',
                     true
                 )
             ]
         )
+        activeChoice(
+            name: 'SERVICE',
+            description: 'Select the Service',
+            choiceType: 'PT_CHECKBOX',
+            script: [
+                $class: 'org.biouno.unochoice.model.GroovyScript',
+                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
+                    'return moh.fetchServices()',
+                    true
+                )
+            ]
+        )
+        string(
+            name: 'VERSION',
+            defaultValue: moh.fetchVersion(),
+            description: 'Specify the Version to deploy'
+        )
     }
 
     stages {
-        stage('Display Parameters') {
-            steps {
-                script {
-                    echo "Selected Site: ${params.SITE?.join(', ') ?: 'None selected'}"
-                }
-            }
-        }
+        // Your stages here
     }
 }
