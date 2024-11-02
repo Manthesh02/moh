@@ -30,18 +30,27 @@ pipeline {
         )
         string(
             name: 'TEST_VERSION',
-            defaultValue: moh.fetchVersion(), // Fetch the default version from the library
+            defaultValue: '', // Initialize as empty, we will set it in a script block
             description: 'Specify the Test Version'
         )
     }
 
     stages {
+        stage('Initialize') {
+            steps {
+                script {
+                    // Fetch the default version from the library and set it as an environment variable
+                    env.TEST_VERSION = moh.fetchVersion()
+                }
+            }
+        }
+
         stage('Display Parameters') {
             steps {
                 script {
                     echo "Selected Test Sites: ${params.TEST_SITE?.join(', ') ?: 'None selected'}"
                     echo "Selected Test Services: ${params.TEST_SERVICE?.join(', ') ?: 'None selected'}"
-                    echo "Test Version: ${params.TEST_VERSION}"
+                    echo "Test Version: ${env.TEST_VERSION}"
                 }
             }
         }
