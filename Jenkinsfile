@@ -1,4 +1,4 @@
-@Library('moh') _ // Load the shared library
+@Library('moh') _
 
 pipeline {
     agent any
@@ -11,7 +11,7 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return moh.fetchParams().sites''', // Access method directly
+                    '''return moh.fetchParams().sites''',
                     true
                 )
             ]
@@ -23,14 +23,14 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return moh.fetchParams().services''', // Access method directly
+                    '''return moh.fetchParams().services''',
                     true
                 )
             ]
         )
         string(
             name: 'VERSION',
-            defaultValue: moh.fetchParams().version, // Fetch the default version from the library
+            defaultValue: moh.fetchParams().version,
             description: 'Specify the Version to deploy'
         )
     }
@@ -39,8 +39,8 @@ pipeline {
         stage('Display Parameters') {
             steps {
                 script {
-                    echo "Selected Sites: ${params.SITE.join(', ')}"
-                    echo "Selected Services: ${params.SERVICE.join(', ')}"
+                    echo "Selected Sites: ${params.SITE?.join(', ') ?: 'None selected'}"
+                    echo "Selected Services: ${params.SERVICE?.join(', ') ?: 'None selected'}"
                     echo "Version: ${params.VERSION}"
                 }
             }
@@ -49,7 +49,7 @@ pipeline {
         stage('Pull Docker Image') {
             steps {
                 script {
-                    def services = params.SERVICE.tokenize(',')
+                    def services = params.SERVICE?.tokenize(',') ?: []
                     services.each { service ->
                         echo "Pulling image: oasissys/${service}:${params.VERSION}"
                         sh "docker pull oasissys/${service}:${params.VERSION}"
@@ -65,7 +65,7 @@ pipeline {
         stage('Copy and Update') {
             steps {
                 script {
-                    def sites = params.SITE.tokenize(',')
+                    def sites = params.SITE?.tokenize(',') ?: []
                     def updateStages = [:]
                     for (site in sites) {
                         site = site.trim()
