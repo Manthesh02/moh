@@ -30,12 +30,41 @@ pipeline {
         )
         string(
             name: 'VERSION',
-            defaultValue: moh.fetchVersion(),
+            defaultValue: '',
             description: 'Specify the Version to deploy'
         )
     }
 
     stages {
-        // Your stages here
+        stage('Initialize') {
+            steps {
+                script {
+                    // Fetch the default version from the library
+                    def defaultVersion = moh.fetchVersion()
+                    echo "Default Version: ${defaultVersion}"
+                    currentBuild.rawBuild.getAction(hudson.model.ParametersAction).getParameter('VERSION').setValue(defaultVersion)
+                }
+            }
+        }
+        
+        // Add your other stages here
+        stage('Display Parameters') {
+            steps {
+                script {
+                    echo "Selected Sites: ${params.SITE?.join(', ') ?: 'None selected'}"
+                    echo "Selected Services: ${params.SERVICE?.join(', ') ?: 'None selected'}"
+                    echo "Version: ${params.VERSION}"
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Build completed successfully."
+        }
+        failure {
+            echo "Build failed."
+        }
     }
 }
