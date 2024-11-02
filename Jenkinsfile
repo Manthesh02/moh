@@ -12,7 +12,7 @@ pipeline {
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
                     '''return moh.fetchParams().sites''',
-                    true
+                    true // Use Groovy Sandbox
                 )
             ]
         )
@@ -24,7 +24,7 @@ pipeline {
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
                     '''return moh.fetchParams().services''',
-                    true
+                    true // Use Groovy Sandbox
                 )
             ]
         )
@@ -39,20 +39,12 @@ pipeline {
         stage('Display Parameters') {
             steps {
                 script {
-                    echo "Selected Sites: ${params.SITE.join(', ')}"
-                    echo "Selected Services: ${params.SERVICE.join(', ')}"
+                    echo "Selected Sites: ${params.SITE}"
+                    echo "Selected Services: ${params.SERVICE}"
                     echo "Version: ${params.VERSION}"
                 }
             }
         }
-    }
-
-    post {
-        success {
-            echo "Update completed successfully."
-        }
-        failure {
-            echo "Update failed."
-        }
+        // Additional stages here...
     }
 }
