@@ -11,7 +11,7 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return moh.fetchParams().sites''',
+                    'return moh.fetchParams().sites',  // Removed extra quotes
                     true
                 )
             ]
@@ -23,7 +23,7 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return moh.fetchParams().services''',
+                    'return moh.fetchParams().services',  // Removed extra quotes
                     true
                 )
             ]
