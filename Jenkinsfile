@@ -1,28 +1,30 @@
-@Library('moh') _ // Ensure your shared library is loaded
+@Library('moh') _ // Load your shared library
 
 node {
     properties([
         parameters([
-            activeChoice(name: 'SITE',
+            [$class: 'org.biouno.unochoice.model.ActiveChoiceParameter',
+                name: 'SITE',
                 choiceType: 'PT_SINGLE_SELECT',
                 script: [
-                    class: 'org.biouno.unochoice.model.GroovyScript',
+                    $class: 'org.biouno.unochoice.model.GroovyScript',
                     script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
                         'return Moh.fetchSites()',
                         true
                     )
                 ]
-            ),
-            activeChoice(name: 'SERVICE',
+            ],
+            [$class: 'org.biouno.unochoice.model.ActiveChoiceParameter',
+                name: 'SERVICE',
                 choiceType: 'PT_SINGLE_SELECT',
                 script: [
-                    class: 'org.biouno.unochoice.model.GroovyScript',
+                    $class: 'org.biouno.unochoice.model.GroovyScript',
                     script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
                         'return Moh.fetchServices()',
                         true
                     )
                 ]
-            ),
+            ],
             string(name: 'VERSION', 
                 defaultValue: '1.0.0', 
                 description: 'Specify the Version to deploy'
