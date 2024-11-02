@@ -30,7 +30,7 @@ pipeline {
         )
         string(
             name: 'VERSION',
-            defaultValue: moh.fetchParams().version,
+            defaultValue: '1.0.0',
             description: 'Specify the Version to deploy'
         )
     }
@@ -39,12 +39,11 @@ pipeline {
         stage('Display Parameters') {
             steps {
                 script {
-                    echo "Selected Sites: ${params.SITE.join(', ')}"
-                    echo "Selected Services: ${params.SERVICE.join(', ')}"
+                    echo "Selected Sites: ${params.SITE}"
+                    echo "Selected Services: ${params.SERVICE}"
                     echo "Version: ${params.VERSION}"
                 }
             }
         }
-        // Additional stages can be added here...
     }
 }
