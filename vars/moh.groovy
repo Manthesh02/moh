@@ -1,13 +1,16 @@
 class Moh {
     static List<String> fetchSites() {
-        return ["MHHTP:10.5.43.89", "LGHJP:10.5.43.93"]
+        println "Fetching sites..."
+        return ["Site1:10.0.0.1", "Site2:10.0.0.2"]
     }
 
     static List<String> fetchServices() {
-        return ["word-report", "dataset-setup"]
+        println "Fetching services..."
+        return ["Service1", "Service2"]
     }
 
     static String fetchVersion() {
+        println "Fetching version..."
         return "1.0.0"
     }
 }
