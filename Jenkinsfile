@@ -1,36 +1,24 @@
 @Library('moh') _
 
+def sharedParams = moh.fetchParams()
+
 pipeline {
     agent any
 
     parameters {
-        activeChoice(
+        choice(
             name: 'SITE',
-            description: 'Select the Site (namespace:IP)',
-            choiceType: 'PT_CHECKBOX',
-            script: [
-                $class: 'org.biouno.unochoice.model.GroovyScript',
-                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    'return moh.fetchParams().sites',
-                    true
-                )
-            ]
+            choices: sharedParams.sites,
+            description: 'Select the Site (namespace:IP)'
         )
-        activeChoice(
+        choice(
             name: 'SERVICE',
-            description: 'Select the Service',
-            choiceType: 'PT_CHECKBOX',
-            script: [
-                $class: 'org.biouno.unochoice.model.GroovyScript',
-                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    'return moh.fetchParams().services',
-                    true
-                )
-            ]
+            choices: sharedParams.services,
+            description: 'Select the Service'
         )
         string(
             name: 'VERSION',
-            defaultValue: moh.fetchParams().version,
+            defaultValue: sharedParams.version,
             description: 'Specify the Version to deploy'
         )
     }
@@ -39,12 +27,12 @@ pipeline {
         stage('Display Parameters') {
             steps {
                 script {
-                    echo "Selected Sites: ${params.SITE.join(', ')}"
-                    echo "Selected Services: ${params.SERVICE.join(', ')}"
+                    echo "Selected Site: ${params.SITE}"
+                    echo "Selected Service: ${params.SERVICE}"
                     echo "Version: ${params.VERSION}"
                 }
             }
         }
-        // Additional stages...
+        // Additional stages can be added here...
     }
 }
