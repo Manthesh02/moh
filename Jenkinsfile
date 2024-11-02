@@ -36,15 +36,25 @@ pipeline {
     }
 
     stages {
+        stage('Fetch Parameters') {
+            steps {
+                script {
+                    def params = moh.fetchParams()
+                    echo "Fetched Sites: ${params.sites.join(', ')}"
+                    echo "Fetched Services: ${params.services.join(', ')}"
+                    echo "Fetched Version: ${params.version}"
+                }
+            }
+        }
+
         stage('Display Parameters') {
             steps {
                 script {
-                    echo "Selected Sites: ${params.SITE}"
-                    echo "Selected Service: ${params.SERVICE}"
+                    echo "Selected Sites: ${params.SITE.join(', ')}"
+                    echo "Selected Services: ${params.SERVICE.join(', ')}"
                     echo "Version: ${params.VERSION}"
                 }
             }
         }
-        // Additional stages can be added here...
     }
 }
