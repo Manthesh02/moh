@@ -11,8 +11,8 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    'return moh.fetchParams().sites',  // Removed extra quotes
-                    true
+                    'return moh.fetchParams().sites',
+                    true // Sandbox execution
                 )
             ]
         )
@@ -23,8 +23,8 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    'return moh.fetchParams().services',  // Removed extra quotes
-                    true
+                    'return moh.fetchParams().services',
+                    true // Sandbox execution
                 )
             ]
         )
@@ -39,8 +39,8 @@ pipeline {
         stage('Display Parameters') {
             steps {
                 script {
-                    echo "Selected Sites: ${params.SITE.join(', ')}"
-                    echo "Selected Services: ${params.SERVICE.join(', ')}"
+                    echo "Selected Sites: ${params.SITE}"
+                    echo "Selected Service: ${params.SERVICE}"
                     echo "Version: ${params.VERSION}"
                 }
             }
