@@ -43,6 +43,17 @@ pipeline {
                     def selectedSites = params.SITE ?: []
                     def selectedServices = params.SERVICE ?: []
 
+                    // Check if parameters are provided
+                    if (selectedSites.isEmpty()) {
+                        error "No site selected. Please select at least one site."
+                    }
+                    if (selectedServices.isEmpty()) {
+                        error "No service selected. Please select at least one service."
+                    }
+                    if (!params.VERSION) {
+                        error "Version must be specified."
+                    }
+
                     // Iterate over each selected site
                     selectedSites.each { site ->
                         def (namespace, ip) = site.split(':')
