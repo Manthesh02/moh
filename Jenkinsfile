@@ -4,22 +4,28 @@ pipeline {
     agent any
 
     parameters {
-        activeChoiceReactiveParam(
+        activeChoice(
             name: 'SITE',
             description: 'Select the Site (namespace:IP)',
-            choiceType: 'CHECKBOX',
-            groovyScript: [
-                script: '''return Moh.fetchSites()''',
-                fallbackScript: 'return ["No sites available"]'
+            choiceType: 'PT_CHECKBOX',
+            script: [
+                $class: 'org.biouno.unochoice.model.GroovyScript',
+                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
+                    '''return moh.getSiteMappings()''',
+                    true
+                )
             ]
         )
-        activeChoiceReactiveParam(
+        activeChoice(
             name: 'SERVICE',
-            description: 'Select the Service',
-            choiceType: 'CHECKBOX',
-            groovyScript: [
-                script: '''return Moh.fetchServices()''',
-                fallbackScript: 'return ["No services available"]'
+            description: 'Select the Service to update',
+            choiceType: 'PT_CHECKBOX',
+            script: [
+                $class: 'org.biouno.unochoice.model.GroovyScript',
+                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
+                    '''return moh.getServiceList()''',
+                    true
+                )
             ]
         )
         string(
@@ -30,60 +36,24 @@ pipeline {
     }
 
     stages {
-        stage('Display Parameters') {
+        stage('Update Services') {
             steps {
                 script {
-                    echo "Selected Sites: ${params.SITE?.join(', ') ?: 'None selected'}"
-                    echo "Selected Services: ${params.SERVICE?.join(', ') ?: 'None selected'}"
-                    echo "Version: ${params.VERSION}"
-                }
-            }
-        }
+                    // Get selected sites and services
+                    def selectedSites = params.SITE ?: []
+                    def selectedServices = params.SERVICE ?: []
 
-        stage('Pull Docker Image') {
-            steps {
-                script {
-                    def services = params.SERVICE?.tokenize(',') ?: []
-                    services.each { service ->
-                        echo "Pulling image: oasissys/${service}:${params.VERSION}"
-                        sh "docker pull oasissys/${service}:${params.VERSION}"
-                        def imageCheck = sh(script: "docker images -q oasissys/${service}:${params.VERSION}", returnStdout: true).trim()
-                        if (!imageCheck) {
-                            error "Image oasissys/${service}:${params.VERSION} not found."
+                    // Iterate over each selected site
+                    selectedSites.each { site ->
+                        def (namespace, ip) = site.split(':')
+                        echo "Connecting to ${namespace} at ${ip}"
+
+                        // Iterate over each selected service
+                        selectedServices.each { service ->
+                            echo "Updating ${service} on ${namespace} with version ${params.VERSION}"
+                            // Add logic to connect and perform the update, e.g. using SSH
                         }
                     }
-                }
-            }
-        }
-
-        stage('Copy and Update') {
-            steps {
-                script {
-                    def sites = params.SITE?.tokenize(',') ?: []
-                    def updateStages = [:]
-                    for (site in sites) {
-                        site = site.trim()
-                        if (site) {
-                            def (namespace, ip) = site.split(':')
-                            updateStages["Update on ${ip}"] = {
-                                echo "Updating on ${ip} in namespace ${namespace}..."
-                                def services = params.SERVICE.tokenize(',')
-                                services.each { service ->
-                                    withCredentials([usernamePassword(credentialsId: 'your-ssh-credentials-id', passwordVariable: 'ssh_pass', usernameVariable: 'ssh_user')]) {
-                                        sh """
-                                            docker save oasissys/${service}:${params.VERSION} | sshpass -p "\$ssh_pass" ssh -o StrictHostKeyChecking=no "\$ssh_user@${ip}" 'cat > /tmp/${service}.tar && \
-                                            docker load -i /tmp/${service}.tar && \
-                                            kubectl set image deployment/${service} ${service}=oasissys/${service}:${params.VERSION} -n ${namespace} && \
-                                            rm -f /tmp/${service}.tar'
-                                        """
-                                    }
-                                }
-                            }
-                        } else {
-                            echo "Skipping empty IP entry."
-                        }
-                    }
-                    parallel updateStages
                 }
             }
         }
