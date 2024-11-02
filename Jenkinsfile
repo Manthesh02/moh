@@ -4,28 +4,22 @@ pipeline {
     agent any
 
     parameters {
-        activeChoice(
+        activeChoiceReactiveParam(
             name: 'SITE',
             description: 'Select the Site (namespace:IP)',
             choiceType: 'CHECKBOX',
-            script: [
-                $class: 'org.biouno.unochoice.model.GroovyScript',
-                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return Moh.fetchSites()''',
-                    true
-                )
+            groovyScript: [
+                script: '''return Moh.fetchSites()''',
+                fallbackScript: 'return ["No sites available"]'
             ]
         )
-        activeChoice(
+        activeChoiceReactiveParam(
             name: 'SERVICE',
             description: 'Select the Service',
             choiceType: 'CHECKBOX',
-            script: [
-                $class: 'org.biouno.unochoice.model.GroovyScript',
-                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return Moh.fetchServices()''',
-                    true
-                )
+            groovyScript: [
+                script: '''return Moh.fetchServices()''',
+                fallbackScript: 'return ["No services available"]'
             ]
         )
         string(
