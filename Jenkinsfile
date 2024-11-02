@@ -6,15 +6,29 @@ pipeline {
     agent any
 
     parameters {
-        choice(
+        activeChoice(
             name: 'SITE',
-            choices: sharedParams.sites,
-            description: 'Select the Site (namespace:IP)'
+            description: 'Select the Site (namespace:IP)',
+            choiceType: 'PT_CHECKBOX',
+            script: [
+                $class: 'org.biouno.unochoice.model.GroovyScript',
+                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
+                    '''return ${moh.fetchParams().sites}''',
+                    true
+                )
+            ]
         )
-        choice(
+        activeChoice(
             name: 'SERVICE',
-            choices: sharedParams.services,
-            description: 'Select the Service'
+            description: 'Select the Service',
+            choiceType: 'PT_CHECKBOX',
+            script: [
+                $class: 'org.biouno.unochoice.model.GroovyScript',
+                script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
+                    '''return ${moh.fetchParams().services}''',
+                    true
+                )
+            ]
         )
         string(
             name: 'VERSION',
@@ -27,8 +41,8 @@ pipeline {
         stage('Display Parameters') {
             steps {
                 script {
-                    echo "Selected Site: ${params.SITE}"
-                    echo "Selected Service: ${params.SERVICE}"
+                    echo "Selected Sites: ${params.SITE.join(', ')}"
+                    echo "Selected Services: ${params.SERVICE.join(', ')}"
                     echo "Version: ${params.VERSION}"
                 }
             }
