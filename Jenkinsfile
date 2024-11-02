@@ -36,22 +36,12 @@ pipeline {
     }
 
     stages {
-        stage('Update Service') {
+        stage('Print Parameters') {
             steps {
                 script {
-                    def selectedSites = params.SITE?.join(', ')
-                    def selectedServices = params.SERVICE?.join(', ')
-                    def version = params.VERSION
-                    
-                    echo "Selected Sites: ${selectedSites ?: 'None selected'}"
-                    echo "Selected Services: ${selectedServices ?: 'None selected'}"
-                    echo "Version: ${version}"
-                    
-                    // Here you would include logic to update the services on the selected sites
-                    // For example:
-                    // selectedSites.split(',').each { site ->
-                    //     // Logic to update each service on the site
-                    // }
+                    echo "Selected Sites: ${params.SITE?.join(', ') ?: 'None selected'}"
+                    echo "Selected Services: ${params.SERVICE?.join(', ') ?: 'None selected'}"
+                    echo "Version: ${params.VERSION}"
                 }
             }
         }
