@@ -30,7 +30,7 @@ pipeline {
         )
         string(
             name: 'VERSION',
-            defaultValue: '',
+            defaultValue: '1.0.0', // You can set a static default or leave it blank
             description: 'Specify the Version to deploy'
         )
     }
@@ -42,12 +42,10 @@ pipeline {
                     // Fetch the default version from the library
                     def defaultVersion = moh.fetchVersion()
                     echo "Default Version: ${defaultVersion}"
-                    currentBuild.rawBuild.getAction(hudson.model.ParametersAction).getParameter('VERSION').setValue(defaultVersion)
                 }
             }
         }
         
-        // Add your other stages here
         stage('Display Parameters') {
             steps {
                 script {
