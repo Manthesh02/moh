@@ -1,7 +1,5 @@
 @Library('moh') _
 
-def sharedParams = moh.fetchParams()
-
 pipeline {
     agent any
 
@@ -13,7 +11,7 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return ${moh.fetchParams().sites}''',
+                    '''return moh.fetchParams().sites''',
                     true
                 )
             ]
@@ -25,14 +23,14 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return ${moh.fetchParams().services}''',
+                    '''return moh.fetchParams().services''',
                     true
                 )
             ]
         )
         string(
             name: 'VERSION',
-            defaultValue: sharedParams.version,
+            defaultValue: moh.fetchParams().version,
             description: 'Specify the Version to deploy'
         )
     }
