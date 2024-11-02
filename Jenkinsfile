@@ -1,4 +1,4 @@
-@Library('moh') _ 
+@Library('moh') _
 
 pipeline {
     agent any
@@ -36,46 +36,24 @@ pipeline {
     }
 
     stages {
-        stage('Update Services') {
+        stage('Update Service') {
             steps {
                 script {
-                    // Get selected sites and services
-                    def selectedSites = params.SITE ?: []
-                    def selectedServices = params.SERVICE ?: []
-
-                    // Check if parameters are provided
-                    if (selectedSites.isEmpty()) {
-                        error "No site selected. Please select at least one site."
-                    }
-                    if (selectedServices.isEmpty()) {
-                        error "No service selected. Please select at least one service."
-                    }
-                    if (!params.VERSION) {
-                        error "Version must be specified."
-                    }
-
-                    // Iterate over each selected site
-                    selectedSites.each { site ->
-                        def (namespace, ip) = site.split(':')
-                        echo "Connecting to ${namespace} at ${ip}"
-
-                        // Iterate over each selected service
-                        selectedServices.each { service ->
-                            echo "Updating ${service} on ${namespace} with version ${params.VERSION}"
-                            // Add logic to connect and perform the update, e.g. using SSH
-                        }
-                    }
+                    def selectedSites = params.SITE?.join(', ')
+                    def selectedServices = params.SERVICE?.join(', ')
+                    def version = params.VERSION
+                    
+                    echo "Selected Sites: ${selectedSites ?: 'None selected'}"
+                    echo "Selected Services: ${selectedServices ?: 'None selected'}"
+                    echo "Version: ${version}"
+                    
+                    // Here you would include logic to update the services on the selected sites
+                    // For example:
+                    // selectedSites.split(',').each { site ->
+                    //     // Logic to update each service on the site
+                    // }
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Update completed successfully."
-        }
-        failure {
-            echo "Update failed."
         }
     }
 }
