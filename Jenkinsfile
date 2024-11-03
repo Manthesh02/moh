@@ -4,15 +4,22 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    // Load properties from the file
-                    def propsFile = readFile('sites.properties')
-                    def props = [:]
-                    propsFile.split('\n').each { line ->
-                        def (key, value) = line.split('=')
-                        props[key.trim()] = value.trim()
+                    // Attempt to read the properties file
+                    try {
+                        def propsFile = readFile('/path/in/container/sites.properties')
+                        echo "Properties File Content: ${propsFile}" // Print the entire content
+
+                        // Extract the SITE variable
+                        def siteLine = propsFile.split('\n').find { it.startsWith('SITE=') }
+                        if (siteLine) {
+                            env.SITE = siteLine.split('=', 2)[1].trim()
+                        } else {
+                            error "SITE not found in properties file."
+                        }
+                        echo "Loaded SITE: ${env.SITE}"
+                    } catch (Exception e) {
+                        error "Error reading properties file: ${e.message}"
                     }
-                    env.SITE = props.SITE // Assuming 'SITE' is the key in your properties file
-                    echo "Loaded SITE: ${env.SITE}" // Debugging line
                 }
             }
         }
@@ -30,7 +37,7 @@ pipeline {
                     true
                 )
             ],
-            choiceType: 'PT_CHECKBOX' // Change to checkboxes
+            choiceType: 'PT_CHECKBOX'
         )
     }
 }
