@@ -19,7 +19,7 @@ pipeline {
         choice(
             name: 'SERVICE',
             description: 'Select the Service',
-            choices: moh.getServiceList()
+            choices: getServiceChoices()
         )
         string(
             name: 'VERSION',
@@ -100,4 +100,9 @@ pipeline {
             echo "Update failed."
         }
     }
+}
+
+// Define a function to get service choices
+def getServiceChoices() {
+    return moh.getServiceList() // Call your shared library method here
 }
