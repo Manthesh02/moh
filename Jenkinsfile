@@ -5,7 +5,12 @@ pipeline {
             steps {
                 script {
                     // Load properties from the file
-                    def props = readProperties(file: 'sites.properties')
+                    def propsFile = readFile('sites.properties')
+                    def props = [:]
+                    propsFile.split('\n').each { line ->
+                        def (key, value) = line.split('=')
+                        props[key.trim()] = value.trim()
+                    }
                     env.SITE = props.SITE // Assuming 'SITE' is the key in your properties file
                     echo "Loaded SITE: ${env.SITE}" // Debugging line
                 }
