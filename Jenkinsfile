@@ -11,7 +11,7 @@ pipeline {
             script: [
                 $class: 'org.biouno.unochoice.model.GroovyScript',
                 script: new org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript(
-                    '''return new groovy.util.Eval().getSiteMappings()''',
+                    '''return moh.getSiteMappings()''',
                     true
                 )
             ]
