@@ -4,9 +4,18 @@ pipeline {
         stage('Prepare') {
             steps {
                 script {
-                    // Load properties from the sites.properties file
-                    def props = readProperties file: 'sites.properties'
-                    env.SITE = props.SITE
+                    // Read the properties file
+                    def propsContent = readFile 'sites.properties'
+                    def propsMap = [:]
+                    
+                    // Parse the properties into a map
+                    propsContent.split('\n').each { line ->
+                        def (key, value) = line.split('=')
+                        propsMap[key.trim()] = value.trim()
+                    }
+                    
+                    // Set the SITE environment variable
+                    env.SITE = propsMap.SITE
                 }
             }
         }
