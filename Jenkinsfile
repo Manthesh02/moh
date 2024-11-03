@@ -10,12 +10,22 @@ pipeline {
                     
                     // Parse the properties into a map
                     propsContent.split('\n').each { line ->
-                        def (key, value) = line.split('=')
-                        propsMap[key.trim()] = value.trim()
+                        // Ignore empty lines or lines that don't contain '='
+                        if (line.trim()) {
+                            def parts = line.split('=')
+                            if (parts.length == 2) { // Ensure there are exactly 2 parts
+                                def key = parts[0].trim()
+                                def value = parts[1].trim()
+                                propsMap[key] = value
+                            } else {
+                                echo "Skipping invalid line: ${line}"
+                            }
+                        }
                     }
                     
                     // Set the SITE environment variable
-                    env.SITE = propsMap.SITE
+                    env.SITE = propsMap.get('SITE', '')
+                    echo "Loaded SITE: ${env.SITE}"
                 }
             }
         }
@@ -33,7 +43,7 @@ pipeline {
                     true
                 )
             ],
-            choiceType: 'PT_CHECKBOX' // Change to checkbox
+            choiceType: 'PT_CHECKBOX'
         )
     }
 }
